@@ -16,6 +16,11 @@
 #include "file.h"
 #include "fcntl.h"
 
+// A global counter for read count
+uint64 read_count = 0;
+struct spinlock read_count_lock = {.locked = 0};
+
+
 // Fetch the nth word-sized system call argument as a file descriptor
 // and return both the descriptor and the corresponding struct file.
 static int
@@ -72,11 +77,23 @@ sys_read(void)
   int n;
   uint64 p;
 
+  // Increment read_count every time sys_read() is called,
+  // regardless of success or failure
+  acquire(&read_count_lock);
+  read_count++;
+  release(&read_count_lock);
+
   argaddr(1, &p);
   argint(2, &n);
   if(argfd(0, 0, &f) < 0)
     return -1;
   return fileread(f, p, n);
+}
+
+uint64
+sys_getreadcount(void)
+{
+  return read_count;
 }
 
 uint64
