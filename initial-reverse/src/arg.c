@@ -27,7 +27,9 @@ static int is_same_file(const char *in_file, const char *out_file)
 
 int check_args(int argc, char *argv[], fd_t *fds) 
 {
-    fds[0] = fds[1] = -1;
+    fds[0] = 0;
+    fds[1] = 1;
+    
     if (argc > 3) {
         fprintf(stderr, ERR_INV_ARGS);
         exit(1);
@@ -52,7 +54,6 @@ int check_args(int argc, char *argv[], fd_t *fds)
             exit(1);
         }
     }
-    if (fds[0] == -1) fds[0] = 0;
-    if (fds[1] == -1) fds[1] = 1;
+
     return 1;
 }
