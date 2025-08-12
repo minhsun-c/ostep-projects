@@ -1,0 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+
+#include "header.h"
+
+
+int main(int argc, char *argv[])
+{
+    fd_t fds[2];
+    check_args(argc, argv, fds);
+    reverse_file(fds);
+}
