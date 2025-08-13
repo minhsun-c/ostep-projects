@@ -68,6 +68,11 @@ usertrap(void)
     syscall();
   } else if((which_dev = devintr()) != 0){
     // ok
+    if (which_dev == 2){ // timer interrupt
+      acquire(&p->lock);
+      p->ticks ++;
+      release(&p->lock);
+    }
   } else if((r_scause() == 15 || r_scause() == 13) &&
             vmfault(p->pagetable, r_stval(), (r_scause() == 13)? 1 : 0) != 0) {
     // page fault on lazily-allocated page
