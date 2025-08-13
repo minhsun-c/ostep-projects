@@ -108,13 +108,7 @@ sys_settickets(void)
   if (ticket < 1) 
     return -1;
 
-  struct proc *p = myproc();
-
-  acquire(&p->lock);
-  p->tickets = ticket;
-  release(&p->lock);
-
-  return 0;
+  return settickets(ticket);
 }
 
 uint64

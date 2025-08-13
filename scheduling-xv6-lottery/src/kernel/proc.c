@@ -16,6 +16,9 @@ struct proc *initproc;
 int nextpid = 1;
 struct spinlock pid_lock;
 
+int total_tickets = 0;
+struct spinlock tickets_lock;
+
 extern void forkret(void);
 static void freeproc(struct proc *p);
 
@@ -52,6 +55,7 @@ procinit(void)
   
   initlock(&pid_lock, "nextpid");
   initlock(&wait_lock, "wait_lock");
+  initlock(&tickets_lock, "tickets");
   for(p = proc; p < &proc[NPROC]; p++) {
       initlock(&p->lock, "proc");
       p->state = UNUSED;
@@ -127,6 +131,10 @@ found:
   p->state = USED;
   p->ticks = 0;
   p->tickets = 1;
+
+  acquire(&tickets_lock);
+  total_tickets += p->tickets;
+  release(&tickets_lock);
 
   // Allocate a trapframe page.
   if((p->trapframe = (struct trapframe *)kalloc()) == 0){
@@ -301,6 +309,10 @@ fork(void)
   np->tickets = p->tickets;
   release(&np->lock);
 
+  acquire(&tickets_lock);
+  total_tickets += np->tickets;
+  release(&tickets_lock);
+
   return pid;
 }
 
@@ -343,6 +355,10 @@ exit(int status)
   iput(p->cwd);
   end_op();
   p->cwd = 0;
+
+  acquire(&tickets_lock);
+  total_tickets -= p->tickets;
+  release(&tickets_lock);
 
   acquire(&wait_lock);
 
@@ -437,20 +453,30 @@ scheduler(void)
     intr_off();
 
     int found = 0;
+    int lottery_winner, lottery_cnt = 0;
+
+    srand(ticks);
+    lottery_winner = (rand() % total_tickets) + 1;
+
     for(p = proc; p < &proc[NPROC]; p++) {
       acquire(&p->lock);
       if(p->state == RUNNABLE) {
         // Switch to chosen process.  It is the process's job
         // to release its lock and then reacquire it
         // before jumping back to us.
-        p->state = RUNNING;
-        c->proc = p;
-        swtch(&c->context, &p->context);
+        lottery_cnt += p->tickets;
+        if (lottery_cnt >= lottery_winner) {
+          p->state = RUNNING;
+          c->proc = p;
+          lottery_cnt = 0;
+          lottery_winner = (rand() % total_tickets) + 1;
+          swtch(&c->context, &p->context);
 
-        // Process is done running for now.
-        // It should have changed its p->state before coming back.
-        c->proc = 0;
-        found = 1;
+          // Process is done running for now.
+          // It should have changed its p->state before coming back.
+          c->proc = 0;
+          found = 1;
+        }
       }
       release(&p->lock);
     }
@@ -686,6 +712,21 @@ procdump(void)
     printf("%d %s %s", p->pid, state, p->name);
     printf("\n");
   }
+}
+
+int 
+settickets(int ticket)
+{
+  struct proc *p = myproc();
+
+  acquire(&tickets_lock);
+  total_tickets = total_tickets - p->tickets + ticket;
+  release(&tickets_lock);
+
+  acquire(&p->lock);
+  p->tickets = ticket;
+  release(&p->lock);
+  return 0;
 }
 
 int 
