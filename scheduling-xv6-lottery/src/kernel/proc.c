@@ -297,6 +297,8 @@ fork(void)
 
   acquire(&np->lock);
   np->state = RUNNABLE;
+  np->ticks = 0;
+  np->tickets = p->tickets;
   release(&np->lock);
 
   return pid;
