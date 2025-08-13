@@ -1,6 +1,9 @@
 K=kernel
 U=user
 
+TESTFILE = $U/_test_1 $U/_test_2 $U/_test_3 $U/_test_4 $U/_test_5
+
+
 OBJS = \
   $K/entry.o \
   $K/start.o \
@@ -140,6 +143,7 @@ UPROGS=\
 	$U/_grind\
 	$U/_wc\
 	$U/_zombie\
+	$(TESTFILE)
 
 fs.img: mkfs/mkfs README $(UPROGS)
 	mkfs/mkfs fs.img README $(UPROGS)
