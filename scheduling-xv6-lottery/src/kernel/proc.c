@@ -699,17 +699,10 @@ getpinfo(struct pstat *ps)
   
   for(p = proc, i = 0; p < &proc[NPROC]; p++, i++) {
     acquire(&p->lock);
-    if (p->state == UNUSED) {
-      local_ps.inuse[i] = 0;
-      local_ps.tickets[i] = 0;
-      local_ps.pid[i] = 0;
-      local_ps.ticks[i] = 0;
-    } else {
-      local_ps.inuse[i] = 1;
-      local_ps.tickets[i] = p->tickets;
-      local_ps.pid[i] = p->pid;
-      local_ps.ticks[i] = p->ticks;
-    }
+    local_ps.inuse[i]   = 1 & -(p->state != UNUSED);
+    local_ps.tickets[i] = p->tickets & -(p->state != UNUSED);
+    local_ps.pid[i]     = p->pid & -(p->state != UNUSED);
+    local_ps.ticks[i]   = p->ticks & -(p->state != UNUSED);
     release(&p->lock);
   }
 
