@@ -8,6 +8,10 @@
 #include "func.h"
 #include "header.h"
 
+#define REDIR_EMUL (-1)
+#define REDIR_EINVAL (-2)
+#define REDIR_OPEN (-3)
+
 static group_t *split_command_with_and(group_t *group, char *str);
 static fd_t split_with_redir(char *str);
 static int add_command(group_t *group, char *str);

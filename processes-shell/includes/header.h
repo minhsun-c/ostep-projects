@@ -31,10 +31,4 @@ typedef struct group {
     int parallel;   // executes in parallel / sequential
 } group_t;
 
-// redirection
-#define REDIR_EMUL (-1)
-#define REDIR_EINVAL (-2)
-#define REDIR_OPEN (-3)
-
-
 #endif  // _HEADER_H
