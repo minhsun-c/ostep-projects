@@ -18,14 +18,14 @@ typedef unsigned int uint32_t;
 typedef int fd_t;
 
 // command
-typedef struct {
+typedef struct command {
     char name[CMD_SIZE];
     char argv[NUM_OF_ARG][ARG_SIZE];
     uint32_t argc;
     fd_t fd_out;
 } command_t;
 
-typedef struct {
+typedef struct group {
     command_t *cmds[NUM_OF_CMD];
     uint32_t used;  // number of used command
     int parallel;   // executes in parallel / sequential
