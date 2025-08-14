@@ -27,7 +27,6 @@ group_t *get_command_group(char *str)
         return NULL;
     }
     group->used = 0;
-    group->parallel = 0;
     return split_command_with_and(group, str);
 }
 
@@ -40,7 +39,6 @@ static group_t *split_command_with_and(group_t *group, char *str)
         if (split_and == NULL) {
             break;
         }
-        group->parallel++;
         *split_and = 0;
         add_command(group, str);
         str = split_and + 1;
@@ -54,26 +52,22 @@ static int add_command(group_t *group, char *str)
     char *trim_str = trim(str);
     if (trim_str == NULL) {
         printf("Empty Command\n");
-        goto INVAL_COMMAND;
+        return -1;
     }
 
     fd_t fd_out = split_with_redir(trim_str);
     if (fd_out < 0) {
-        goto INVAL_COMMAND;
+        return -1;
     }
 
     command_t *cmd = parse_command(trim_str);
     if (cmd == NULL) {
-        goto INVAL_COMMAND;
+        return -1;
     }
     cmd->fd_out = fd_out;
     group->cmds[group->used] = cmd;
     group->used++;
     return 1;
-
-INVAL_COMMAND:
-    group->parallel--;
-    return -1;
 }
 
 static command_t *parse_command(char *str)

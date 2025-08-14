@@ -28,7 +28,6 @@ typedef struct command {
 typedef struct group {
     command_t *cmds[NUM_OF_CMD];
     uint32_t used;  // number of used command
-    int parallel;   // executes in parallel / sequential
 } group_t;
 
 #endif  // _HEADER_H
