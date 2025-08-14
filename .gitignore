@@ -13,4 +13,4 @@
 
 # Dev container settings (if not shared)
 .devcontainer/
-
+.vscode/
