@@ -28,11 +28,6 @@ int main(int argc, char *argv[])
     }
 
     while (1) {
-        int res = open_shell(prompt);
-        if (res == 0) {
-            break;
-        } else if (res < 0) {
-            exit(1);
-        }
+        open_shell(prompt);
     }
 }
