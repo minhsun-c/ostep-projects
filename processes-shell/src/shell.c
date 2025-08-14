@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/errno.h>
 
-#include "func.h"
 #include "header.h"
+#include "func.h"
 
 int open_shell(int prompt)
 {
@@ -39,6 +39,7 @@ int open_shell(int prompt)
     if (group == NULL) {
         return -1;
     }
-
+    /* execute command */
+    free(group);
     return 1;
 }

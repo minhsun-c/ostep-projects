@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include "func.h"
 #include "header.h"
+#include "func.h"
 
 int main(int argc, char *argv[])
 {

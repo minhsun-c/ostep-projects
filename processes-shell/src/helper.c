@@ -3,8 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "func.h"
 #include "header.h"
+#include "func.h"
 
 char *trim(char *str)
 {

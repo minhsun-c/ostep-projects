@@ -4,13 +4,13 @@
 #include <string.h>
 #include <sys/errno.h>
 
-#include "func.h"
 #include "header.h"
+#include "func.h"
 
-static command_t *parse_command(char *str);
 static group_t *split_command_with_and(char *str);
-static int add_command(group_t *group, char *str);
 static fd_t split_with_redir(char *str);
+static int add_command(group_t *group, char *str);
+static command_t *parse_command(char *str);
 
 group_t *get_command(char *str)
 {
