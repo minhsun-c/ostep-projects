@@ -9,6 +9,9 @@ int open_shell(int);
 // parse
 struct group *get_command_group(char *);
 
+// exec
+int execute_command_group(struct group *);
+
 // helper
 char *trim(char *str);
 char *ltrim(char *str);

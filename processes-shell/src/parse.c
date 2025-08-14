@@ -12,16 +12,16 @@
 #define REDIR_EINVAL (-2)
 #define REDIR_OPEN (-3)
 
-static group_t *split_command_with_and(group_t *group, char *str);
+static struct group *split_command_with_and(struct group *group, char *str);
 static fd_t split_with_redir(char *str);
-static int add_command(group_t *group, char *str);
+static int add_command(struct group *group, char *str);
 static command_t *parse_command(char *str);
 static void set_command_argv(command_t *cmd, char *str, int *name_set);
 static void print_command(command_t *cmd);
 
-group_t *get_command_group(char *str)
+struct group *get_command_group(char *str)
 {
-    group_t *group = (group_t *) malloc(sizeof(group_t));
+    struct group *group = (struct group *) malloc(sizeof(struct group));
     if (group == NULL) {
         perror("malloc");
         return NULL;
@@ -30,7 +30,7 @@ group_t *get_command_group(char *str)
     return split_command_with_and(group, str);
 }
 
-static group_t *split_command_with_and(group_t *group, char *str)
+static struct group *split_command_with_and(struct group *group, char *str)
 {
     char *split_and;
 
@@ -47,7 +47,7 @@ static group_t *split_command_with_and(group_t *group, char *str)
     return group;
 }
 
-static int add_command(group_t *group, char *str)
+static int add_command(struct group *group, char *str)
 {
     char *trim_str = trim(str);
     if (trim_str == NULL) {

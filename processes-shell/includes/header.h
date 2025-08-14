@@ -25,9 +25,9 @@ typedef struct command {
     fd_t fd_out;
 } command_t;
 
-typedef struct group {
+struct group {
     command_t *cmds[NUM_OF_CMD];
     uint32_t used;  // number of used command
-} group_t;
+};
 
 #endif  // _HEADER_H
