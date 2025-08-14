@@ -7,7 +7,7 @@ struct group;
 int open_shell(int);
 
 // parse
-struct group *get_command(char *);
+struct group *get_command_group(char *);
 
 // helper
 char *trim(char *str);

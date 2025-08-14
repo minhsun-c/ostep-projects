@@ -1,18 +1,21 @@
+#include <ctype.h>
 #include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
 
-#include "header.h"
 #include "func.h"
+#include "header.h"
 
 static group_t *split_command_with_and(char *str);
 static fd_t split_with_redir(char *str);
 static int add_command(group_t *group, char *str);
 static command_t *parse_command(char *str);
+static void set_command_argv(command_t *cmd, char *str, int *name_set);
+static void print_command(command_t *cmd);
 
-group_t *get_command(char *str)
+group_t *get_command_group(char *str)
 {
     return split_command_with_and(str);
 }
@@ -73,7 +76,47 @@ INVAL_COMMAND:
 static command_t *parse_command(char *str)
 {
     printf("Get Command: [%s]\n", str);
-    return NULL;
+    str = trim(str);
+    if (str == NULL) {
+        return NULL;
+    }
+
+    command_t *cmd = (command_t *) malloc(sizeof(command_t));
+    if (cmd == NULL) {
+        perror("malloc");
+        return NULL;
+    }
+    cmd->argc = 0;
+
+    char *sep;
+    int name_set = 0;
+    size_t len = strlen(str);
+    while (1) {
+        sep = memchr(str, ' ', len);
+        if (sep == NULL) {
+            break;
+        }
+        *sep = 0;
+        set_command_argv(cmd, str, &name_set);
+        str = ltrim(sep + 1);
+        if (str == NULL) {
+            return cmd;
+        }
+    }
+    set_command_argv(cmd, str, &name_set);
+    print_command(cmd);
+    return cmd;
+}
+
+static void set_command_argv(command_t *cmd, char *str, int *name_set)
+{
+    if (*name_set == 0) {
+        *name_set = 1;
+        strcpy(cmd->name, str);
+    } else {
+        strcpy(cmd->argv[cmd->argc], str);
+        cmd->argc++;
+    }
 }
 
 static fd_t split_with_redir(char *str)
@@ -99,4 +142,14 @@ static fd_t split_with_redir(char *str)
         return REDIR_OPEN;
     }
     return fd_out;
+}
+
+void print_command(command_t *cmd)
+{
+    printf("==== CMD INFO ====\n");
+    printf("NAME: %s\n", cmd->name);
+    printf("ARGC: %d\n", cmd->argc);
+    for (uint32_t i = 0; i < cmd->argc; i++)
+        printf("ARG[%d]: %s\n", i, cmd->argv[i]);
+    printf("===================\n");
 }

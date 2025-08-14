@@ -4,8 +4,8 @@
 #include <string.h>
 #include <sys/errno.h>
 
-#include "header.h"
 #include "func.h"
+#include "header.h"
 
 int open_shell(int prompt)
 {
@@ -35,7 +35,7 @@ int open_shell(int prompt)
         }
     }
     buf[str_len - 1] = 0;
-    group_t *group = get_command(buf);
+    group_t *group = get_command_group(buf);
     if (group == NULL) {
         return -1;
     }

@@ -3,14 +3,15 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "header.h"
 #include "func.h"
+#include "header.h"
+
 
 char *trim(char *str)
 {
     if (*str == 0)
         return NULL;
-    while (isspace(*str)) {
+    while (*str && isspace(*str)) {
         str++;
     }
     size_t len = strlen(str);
@@ -19,6 +20,16 @@ char *trim(char *str)
         len--;
     }
     if (len == 0)
+        return NULL;
+    return str;
+}
+
+char *ltrim(char *str)
+{
+    while (*str && isspace(*str)) {
+        str++;
+    }
+    if (*str == 0)
         return NULL;
     return str;
 }
