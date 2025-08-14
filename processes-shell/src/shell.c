@@ -15,7 +15,7 @@ int open_shell(int prompt)
 
     while (1) {
         if (prompt)
-            printf("wish>");
+            printf("wish> ");
         str_len = getline(&buf, &buf_size, stdin);
         if (str_len < 0) {
             if (errno == ENOMEM) {
@@ -35,11 +35,12 @@ int open_shell(int prompt)
         }
     }
     buf[str_len - 1] = 0;
-    group_t *group = get_command_group(buf);
+    struct group *group = get_command_group(buf);
     if (group == NULL) {
         return -1;
     }
     /* execute command */
+    int res = execute_command_group(group);
     free(group);
-    return 1;
+    return res;
 }
