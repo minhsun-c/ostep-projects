@@ -8,7 +8,7 @@
 #include "func.h"
 #include "header.h"
 
-static group_t *split_command_with_and(char *str);
+static group_t *split_command_with_and(group_t *group, char *str);
 static fd_t split_with_redir(char *str);
 static int add_command(group_t *group, char *str);
 static command_t *parse_command(char *str);
@@ -17,11 +17,6 @@ static void print_command(command_t *cmd);
 
 group_t *get_command_group(char *str)
 {
-    return split_command_with_and(str);
-}
-
-static group_t *split_command_with_and(char *str)
-{
     group_t *group = (group_t *) malloc(sizeof(group_t));
     if (group == NULL) {
         perror("malloc");
@@ -29,7 +24,11 @@ static group_t *split_command_with_and(char *str)
     }
     group->used = 0;
     group->parallel = 0;
+    return split_command_with_and(group, str);
+}
 
+static group_t *split_command_with_and(group_t *group, char *str)
+{
     char *split_and;
 
     while (1) {
