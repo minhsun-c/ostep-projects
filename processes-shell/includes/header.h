@@ -32,4 +32,7 @@ struct group {
     uint32_t used;  // number of used command
 };
 
+// fork
+typedef int pid_t;
+
 #endif  // _HEADER_H
