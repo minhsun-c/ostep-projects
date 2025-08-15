@@ -11,6 +11,7 @@
 #define ERR_SHELL_ARG DEFAULT_MSG
 #define ERR_REDIR_ARG DEFAULT_MSG
 #define ERR_REDIR_MUL DEFAULT_MSG
+#define ERR_REDIR_NO_CMD DEFAULT_MSG
 #define ERR_CMD DEFAULT_MSG
 #define ERR_EXIT DEFAULT_MSG
 #define ERR_CD DEFAULT_MSG
@@ -27,6 +28,7 @@ static inline void print_error(const char *msg)
 #define ERR_SHELL_ARG "bad invocation: wish expects 0 or 1 argument\n"
 #define ERR_REDIR_ARG "redirection error: exactly one output file required\n"
 #define ERR_REDIR_MUL "redirection error: multiple '>' not allowed\n"
+#define ERR_REDIR_NO_CMD "redirection error: missing command before '>'\n"
 #define ERR_CMD "command not found or not executable\n"
 #define ERR_EXIT "exit takes no arguments\n"
 #define ERR_CD "cd takes exactly one argument\n"
@@ -39,4 +41,4 @@ static inline void print_error(const char *msg)
 }
 #endif
 
-#endif // __ERROR_H
+#endif  // __ERROR_H

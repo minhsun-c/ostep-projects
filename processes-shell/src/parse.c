@@ -9,10 +9,6 @@
 #include "func.h"
 #include "header.h"
 
-#define REDIR_EMUL (-1)
-#define REDIR_EINVAL (-2)
-#define REDIR_OPEN (-3)
-
 static struct group *split_command_with_and(struct group *group, char *str);
 static fd_t split_with_redir(char *str);
 static int add_command(struct group *group, char *str);
@@ -115,25 +111,29 @@ static void set_command_argv(command_t *cmd, char *str, int *name_set)
 
 static fd_t split_with_redir(char *str)
 {
+    str = trim(str);
     char *redir = memchr(str, '>', strlen(str));
     if (redir == NULL) {  // no redir in this command
         return FD_STDOUT;
+    } else if (redir == str) {
+        print_error(ERR_REDIR_NO_CMD);
+        return -1;
     } else if (memchr(redir + 1, '>', strlen(redir + 1))) {
         print_error(ERR_REDIR_MUL);
-        return REDIR_EMUL;
+        return -1;
     }
 
     *redir = 0;
     str = trim(redir + 1);
     if (str == NULL || find_space(str)) {  // != 1 arguments
         print_error(ERR_REDIR_ARG);
-        return REDIR_EINVAL;
+        return -1;
     }
 
     fd_t fd_out = open(str, O_WRONLY | O_CREAT | O_TRUNC, 0666);
     if (fd_out < 0) {
         perror("open");
-        return REDIR_OPEN;
+        return -1;
     }
     return fd_out;
 }
