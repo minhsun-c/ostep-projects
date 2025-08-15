@@ -81,9 +81,8 @@ static command_t *parse_command(char *str)
 
     char *sep;
     int name_set = 0;
-    size_t len = strlen(str);
     while (1) {
-        sep = memchr(str, ' ', len);
+        sep = strchr(str, ' ');
         if (sep == NULL) {
             break;
         }

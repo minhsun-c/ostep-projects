@@ -21,9 +21,11 @@ int open_shell(int prompt)
         if (str_len < 0) {
             if (errno == ENOMEM) {
                 perror("getline");
+                free(buf);
                 return -ENOMEM;
             } else if (errno == EINVAL) {
                 perror("getline");
+                free(buf);
                 return -EINVAL;
             } else {  // EOF
                 free(buf);
@@ -37,11 +39,14 @@ int open_shell(int prompt)
     }
     buf[str_len - 1] = 0;
     struct group *group = get_command_group(buf);
+    free(buf);
     if (group == NULL) {
         return -1;
     }
     /* execute command */
     int res = execute_command_group(group);
+    for (uint32_t i=0; i<group->used; i++)
+        free(group->cmds[i]);
     free(group);
     return res;
 }
