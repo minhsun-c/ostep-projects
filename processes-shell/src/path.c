@@ -11,7 +11,6 @@
 #include "header.h"
 
 static int is_path_valid(char *);
-static void show_path(void);
 
 char path[NUM_OF_PATH][PATH_SIZE];
 uint32_t path_used;

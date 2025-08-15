@@ -164,7 +164,6 @@ static int dup2_redir(command_t *cmd)
 static int find_full_path(command_t *cmd, char *path)
 {
     uint32_t psize = path_size();
-    char full_path[PATH_SIZE + CMD_SIZE];
     for (uint32_t i = 0; i < psize; i++) {
         char *pname = path_index(i);
         snprintf(path, PATH_SIZE + CMD_SIZE, "%s/%s", pname, cmd->name);
