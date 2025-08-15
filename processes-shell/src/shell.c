@@ -4,6 +4,7 @@
 #include <string.h>
 #include <sys/errno.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 

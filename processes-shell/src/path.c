@@ -6,6 +6,7 @@
 #include <sys/errno.h>
 #include <sys/stat.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 
@@ -26,14 +27,13 @@ int path_init()
 int path_set(char *str)
 {
     if (is_path_valid(str) < 0) {
-        fprintf(stderr, "Invalid Path [%s]\n", str);
+        print_error(ERR_PATH);
         return -1;
     }
     if (path_used >= NUM_OF_PATH)
         return -1;
     strcpy(path[path_used], str);
     path_used++;
-    show_path();
     return 0;
 }
 
@@ -67,11 +67,4 @@ static int is_path_valid(char *str)
         return -1;
     }
     return 0;
-}
-
-static void show_path(void)
-{
-    for (uint32_t i = 0; i < path_used; i++) {
-        printf("PATH[%d] %s\n", i, path[i]);
-    }
 }

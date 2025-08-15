@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 

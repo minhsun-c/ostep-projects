@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 
@@ -11,7 +12,7 @@ int main(int argc, char *argv[])
     fd_t fd_in = FD_STDIN;
     int prompt = 1;
     if (argc > 2) {
-        fprintf(stderr, "Shell with invalid arguments\n");
+        print_error(ERR_SHELL_ARG);
         exit(1);
     } else if (argc == 2) {
         fd_in = open(argv[1], O_RDONLY);

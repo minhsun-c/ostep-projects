@@ -6,6 +6,7 @@
 #include <sys/wait.h>
 #include <unistd.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 
@@ -72,7 +73,7 @@ static int get_command_type(command_t *cmd)
 static int do_exit(struct group *group)
 {
     if (group->cmds[0]->argc != 0) {
-        fprintf(stderr, "Invalid Arguments for Exit\n");
+        print_error(ERR_EXIT);
         return -1;
     }
     free(group);
@@ -82,7 +83,7 @@ static int do_exit(struct group *group)
 static int do_cd(command_t *cmd)
 {
     if (cmd->argc != 1) {
-        fprintf(stderr, "Invalid arguments for cd\n");
+        print_error(ERR_CD);
         return -1;
     }
     if (chdir(cmd->argv[0]) != 0) {
@@ -136,7 +137,7 @@ static int do_fork_child(command_t *cmd)
     execv(args[0], args);
 
 EXEC_FAIL:
-    fprintf(stderr, "EXEC Failed\n");
+    print_error(ERR_EXEC);
     close(cmd->fd_out);
     exit(1);
 }

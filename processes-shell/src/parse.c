@@ -5,6 +5,7 @@
 #include <string.h>
 #include <sys/errno.h>
 
+#include "error.h"
 #include "func.h"
 #include "header.h"
 
@@ -17,7 +18,6 @@ static fd_t split_with_redir(char *str);
 static int add_command(struct group *group, char *str);
 static command_t *parse_command(char *str);
 static void set_command_argv(command_t *cmd, char *str, int *name_set);
-static void print_command(command_t *cmd);
 
 struct group *get_command_group(char *str)
 {
@@ -51,7 +51,6 @@ static int add_command(struct group *group, char *str)
 {
     char *trim_str = trim(str);
     if (trim_str == NULL) {
-        printf("Empty Command\n");
         return -1;
     }
 
@@ -72,7 +71,6 @@ static int add_command(struct group *group, char *str)
 
 static command_t *parse_command(char *str)
 {
-    printf("Get Command: [%s]\n", str);
     str = trim(str);
     if (str == NULL) {
         return NULL;
@@ -101,7 +99,6 @@ static command_t *parse_command(char *str)
         }
     }
     set_command_argv(cmd, str, &name_set);
-    print_command(cmd);
     return cmd;
 }
 
@@ -122,14 +119,14 @@ static fd_t split_with_redir(char *str)
     if (redir == NULL) {  // no redir in this command
         return FD_STDOUT;
     } else if (memchr(redir + 1, '>', strlen(redir + 1))) {
-        printf("Multiple Redirection\n");
+        print_error(ERR_REDIR_MUL);
         return REDIR_EMUL;
     }
 
     *redir = 0;
     str = trim(redir + 1);
     if (str == NULL || find_space(str)) {  // != 1 arguments
-        printf("Invalid Arguments for Redirection\n");
+        print_error(ERR_REDIR_ARG);
         return REDIR_EINVAL;
     }
 
@@ -139,14 +136,4 @@ static fd_t split_with_redir(char *str)
         return REDIR_OPEN;
     }
     return fd_out;
-}
-
-void print_command(command_t *cmd)
-{
-    printf("==== CMD INFO ====\n");
-    printf("NAME: %s\n", cmd->name);
-    printf("ARGC: %d\n", cmd->argc);
-    for (uint32_t i = 0; i < cmd->argc; i++)
-        printf("ARG[%d]: %s\n", i, cmd->argv[i]);
-    printf("===================\n");
 }
