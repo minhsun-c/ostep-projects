@@ -128,13 +128,13 @@ static int do_fork_child(command_t *cmd)
         goto EXEC_FAIL;
 
     char *args[NUM_OF_ARG + 2];
-    args[0] = full_path;
+    args[0] = cmd->name;
     for (uint32_t i = 0; i < cmd->argc; i++) {
         args[i + 1] = cmd->argv[i];
     }
     args[cmd->argc + 1] = NULL;
 
-    execv(args[0], args);
+    execv(full_path, args);
 
 EXEC_FAIL:
     print_error(ERR_EXEC);
