@@ -17,6 +17,7 @@
 #define ERR_CD DEFAULT_MSG
 #define ERR_PATH DEFAULT_MSG
 #define ERR_EXEC DEFAULT_MSG
+#define ERR_BATCH_OPEN DEFAULT_MSG
 
 static inline void print_error(const char *msg)
 {
@@ -34,6 +35,7 @@ static inline void print_error(const char *msg)
 #define ERR_CD "cd takes exactly one argument\n"
 #define ERR_PATH "invalid path entry (not a searchable directory)\n"
 #define ERR_EXEC "failed to execute program\n"
+#define ERR_BATCH_OPEN "failed to open batch file\n"
 
 static inline void print_error(const char *msg)
 {

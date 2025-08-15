@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
         fd_in = open(argv[1], O_RDONLY);
         prompt = 0;
         if (fd_in < 0) {
-            perror("open");
+            print_error(ERR_BATCH_OPEN);
             exit(1);
         }
         if (dup2(fd_in, FD_STDIN) < 0) {
