@@ -95,6 +95,7 @@ static int do_cd(command_t *cmd)
 
 static int do_path(command_t *cmd)
 {
+    path_clear();
     for (uint32_t i = 0; i < cmd->argc; i++)
         path_set(cmd->argv[i]);
     return 0;

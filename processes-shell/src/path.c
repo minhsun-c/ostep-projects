@@ -24,6 +24,12 @@ int path_init()
     return 0;
 }
 
+int path_clear()
+{
+    path_used = 0;
+    return 0;
+}
+
 int path_set(char *str)
 {
     if (is_path_valid(str) < 0) {
