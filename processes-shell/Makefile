@@ -5,6 +5,12 @@ INC = $(wildcard includes/*.h)
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
 
+TESTING ?= 0
+
+ifeq ($(TESTING),1)
+  CFLAGS += -DOSTEP_TESTING
+endif
+
 TARGET = wish
 
 all: $(TARGET)
