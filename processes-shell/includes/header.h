@@ -5,11 +5,13 @@
 typedef unsigned int uint32_t;
 
 // string
-#define BUF_SIZE 1024  // input size
-#define CMD_SIZE 16    // command name
-#define NUM_OF_ARG 8   // number of arguments
-#define ARG_SIZE 32    // size of argument
-#define NUM_OF_CMD 8   // number of commands
+#define BUF_SIZE 1024   // input size
+#define CMD_SIZE 16     // command name
+#define NUM_OF_ARG 8    // number of arguments
+#define ARG_SIZE 32     // size of argument
+#define NUM_OF_CMD 8    // number of commands
+#define PATH_SIZE 64    // size of each path
+#define NUM_OF_PATH 16  // number of path
 
 // file descripter
 #define FD_STDIN 0

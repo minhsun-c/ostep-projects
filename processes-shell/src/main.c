@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
             exit(1);
         }
     }
-
+    path_init();
     while (1) {
         open_shell(prompt);
     }

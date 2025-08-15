@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/errno.h>
+#include <unistd.h>
 
 #include "func.h"
 #include "header.h"
@@ -66,6 +67,10 @@ static int get_command_type(command_t *cmd)
 
 static int do_exit(struct group *group)
 {
+    if (group->cmds[0]->argc != 0) {
+        fprintf(stderr, "Invalid Arguments for Exit\n");
+        return -1;
+    }
     free(group);
     exit(0);
 }
@@ -83,7 +88,12 @@ static int do_cd(command_t *cmd)
     return 0;
 }
 
-static int do_path(command_t *cmd) {}
+static int do_path(command_t *cmd)
+{
+    for (uint32_t i = 0; i < cmd->argc; i++)
+        path_set(cmd->argv[i]);
+    return 0;
+}
 
 
 static int do_fork(command_t *cmd) {}

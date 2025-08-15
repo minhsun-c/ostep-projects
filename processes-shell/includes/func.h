@@ -12,6 +12,14 @@ struct group *get_command_group(char *);
 // exec
 int execute_command_group(struct group *);
 
+// path
+int path_init(void);
+int path_set(char *);
+int path_find(char *);
+unsigned int path_size(void);
+char *path_index(unsigned int);
+
+
 // helper
 char *trim(char *str);
 char *ltrim(char *str);
