@@ -17,7 +17,9 @@ uint32_t path_used;
 
 int path_init()
 {
-    path_used = 0;
+    strcpy(path[0], "/usr/bin");
+    strcpy(path[1], "/bin");
+    path_used = 2;
     return 0;
 }
 
