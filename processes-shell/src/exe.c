@@ -21,7 +21,7 @@ static int exec_single(struct group *group);
 static int do_exit(struct group *group);
 static int do_cd(command_t *cmd);
 static int do_path(command_t *cmd);
-static int do_fork(command_t *cmd);
+static int do_fork(struct group *group);
 static int do_fork_child(command_t *cmd);
 static int dup2_redir(command_t *cmd);
 static int find_full_path(command_t *cmd, char *path);
@@ -35,7 +35,10 @@ int execute_command_group(struct group *group)
     }
 }
 
-static int exec_parallel(struct group *group) {}
+static int exec_parallel(struct group *group)
+{
+    return do_fork(group);
+}
 
 static int exec_single(struct group *group)
 {
@@ -53,7 +56,7 @@ static int exec_single(struct group *group)
         res = do_path(cmd);
         break;
     default:
-        res = do_fork(cmd);
+        res = do_fork(group);
         break;
     }
     return res;
@@ -102,19 +105,25 @@ static int do_path(command_t *cmd)
 }
 
 
-static int do_fork(command_t *cmd)
+static int do_fork(struct group *group)
 {
-    pid_t pid = fork();
-    switch (pid) {
-    case -1:
-        perror("fork");
-        break;
-    case 0:
-        do_fork_child(cmd);
-        return -1;
-    default:
+    uint32_t success = 0;
+    for (uint32_t i = 0; i < group->used; i++) {
+        pid_t pid = fork();
+        switch (pid) {
+        case -1:
+            perror("fork");
+            break;
+        case 0:
+            do_fork_child(group->cmds[i]);
+            return -1;
+        default:
+            success++;
+            break;
+        }
+    }
+    for (uint32_t i = 0; i < success; i++) {
         wait(NULL);
-        break;
     }
     return 0;
 }
