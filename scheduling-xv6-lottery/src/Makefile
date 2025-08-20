@@ -1,7 +1,12 @@
 K=kernel
 U=user
 
-TESTFILE = $U/_test_1 $U/_test_2 $U/_test_3 $U/_test_4 $U/_test_5
+TESTFILE = \
+	$U/_test_1 \
+	$U/_test_2 \
+	$U/_test_3 \
+	$U/_test_4 \
+	$U/_test_5
 
 
 OBJS = \
