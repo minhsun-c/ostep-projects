@@ -738,14 +738,15 @@ getpinfo(struct pstat *ps)
   struct pstat local_ps;
 
   struct proc *p;
-  int i;
+  int i, mask;
   
   for(p = proc, i = 0; p < &proc[NPROC]; p++, i++) {
     acquire(&p->lock);
-    local_ps.inuse[i]   = 1 & -(p->state != UNUSED);
-    local_ps.tickets[i] = p->tickets & -(p->state != UNUSED);
-    local_ps.pid[i]     = p->pid & -(p->state != UNUSED);
-    local_ps.ticks[i]   = p->ticks & -(p->state != UNUSED);
+    mask = -(p->state != UNUSED);
+    local_ps.inuse[i]   = 1 & mask;
+    local_ps.tickets[i] = p->tickets & mask;
+    local_ps.pid[i]     = p->pid & mask;
+    local_ps.ticks[i]   = p->ticks & mask;
     release(&p->lock);
   }
 
